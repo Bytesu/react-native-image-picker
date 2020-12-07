@@ -18,6 +18,11 @@ export default function App() {
       value: 'byte_su@163.com',
       type: FormType.SELECT,
     },
+    {
+      label: '籍贯', name: 'birth',
+      value: '河南',
+      type: FormType.SELECT_FROM_PAGE,
+    },
     [
       {
         label: '性别', name: 'SELECT',
