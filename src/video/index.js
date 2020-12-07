@@ -2,7 +2,7 @@ import {Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, View} from
 import React, {useState} from 'react';
 import {IconConstant, IconCustom} from '../icon';
 import {toast} from '../toast';
-import {_Loading} from '../form/baseCom';
+import {_Loading} from '../form/base-com';
 import Video from 'react-native-video';
 import * as ImagePicker from '../image-picker';
 import Uploader from 'react-native-background-upload';

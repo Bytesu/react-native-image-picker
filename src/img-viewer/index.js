@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {IconConstant, IconCustom} from '../icon';
 import {toast} from '../toast';
-import {_Loading} from '../form/baseCom';
+import {_Loading} from '../form/base-com';
 import {PanelTitle} from '../page/';
 
 const {width, height} = Dimensions.get('window');

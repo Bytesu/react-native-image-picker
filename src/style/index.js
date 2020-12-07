@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   },
   modalBox: { // Loading居中
     flex: 1,
+    backgroundColor:'rgba(4,4,4, 0.57)'
   },
   buttonView: {
     height: 40,

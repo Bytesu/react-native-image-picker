@@ -1,4 +1,4 @@
-import {ActivityIndicator, Modal, Picker, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Button, Modal, Picker, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import _ from 'lodash';
 import styles from '../style';
@@ -51,27 +51,64 @@ export function _TextInput(props) {
   ></TextInput>;
 }
 
+export function _Title(props) {
+  return <View style={{flex: 1}}>
+    <Text
+      style={{color: '#333', fontSize: 14, fontWeight: 'bold'}}
+    >{props.children}</Text>
+  </View>;
+}
+
+export function _Btn(props) {
+  return <Button
+    {...props}
+    // title={props.children}
+    // onPress={() => {
+    // }}
+    activeOpacity={0.5}
+  >{props.children}
+
+    {/*<Text*/}
+    {/*  style={{color: '#333', fontSize: 14}}*/}
+    {/*>{props.children}</Text>*/}
+  </Button>;
+}
+
+export function _BtnBlock(props) {
+  return <TouchableOpacity
+    activeOpacity={0.6}
+    onPress={() => {
+
+    }}
+    style={[styles.buttonView, {
+      flex: 1,
+      zIndex: 1,
+      marginTop: 0,
+      height: 50,
+      lineHeight: 50,
+      backgroundColor: 'rgb(243, 243, 243)',
+      paddingHorizontal: 0,
+      borderRadius: 0,
+      padding: 0,
+    }]}>
+    <Text style={{
+      color: 'red',
+      fontSize: 16,
+    }}>{props.children}</Text>
+  </TouchableOpacity>;
+}
+
 export function _SelectInput(props) {
   let item = props;
 
   const handleChangeDebounce = _.debounce(props.change || function(v) {
   }, 500, {'maxWait': 1000});
   const [dialog, setDialog] = useState({show: false});
-  const shadowOpt = {
-    width: 100,
-    // height: 100,
-    color: '#000',
-    border: 2,
-    radius: 0,
-    opacity: 0.1,
-    x: 1,
-    y: 1,
-    style: {marginTop: 100},
-  };
+  const [height, setHeight] = useState(0);
   return <>
     <Modal
       transparent={true}
-      animationType="slide"
+      animationType="fade"
       visible={dialog.show}
       onRequestClose={() => {
         setDialog({
@@ -79,23 +116,22 @@ export function _SelectInput(props) {
         });
       }}
     >
-      <View style={styles.modalBox}
-            onLayout={(event) => {
-              let {x, y, width, height} = event.nativeEvent.layout;
-              // self.setState(Object.assign({}, self.state, {height: height}));
-            }}
+      <View
+        style={[styles.modalBox, {}]}
+        onLayout={(event) => {
+          let {x, y, width, height} = event.nativeEvent.layout;
+          setHeight(height);
+        }}
       >
-        <View
-          setting={shadowOpt}
+        {height == 0 ? <_Loading/> : <View
         >
           <View
             style={{
-              elevation: 1,
-              top: 0,
+              top: height - 500,
               bottom: 0,
               width: '100%',
               boxShadow: '0px 1px 4px 0pd #333',
-              height: 400 - 100,
+              height: 500,
               borderTopRightRadius: 10,
               borderTopLeftRadius: 10,
               backgroundColor: '#fff',
@@ -103,68 +139,46 @@ export function _SelectInput(props) {
             }}>
             <View
               style={{
-                backgroundColor: '#333',
+                backgroundColor: '#eee',
                 padding: 20,
                 paddingVertical: 13,
                 display: 'flex',
                 flexDirection: 'row',
               }}>
-              <View style={{flex: 1}}>
-                <Text
-                  style={{color: '#333', fontSize: 14, fontWeight: 'bold'}}
-                >请选择</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-
-                }}
-                activeOpacity={0.6}
-              >
-                <Text
-                  style={{color: '#333', fontSize: 14}}
-                >取消</Text>
-              </TouchableOpacity>
+              <_Title>请选择</_Title>
+              <_Btn title="取消" onPress={() => {
+                // console.log()
+                setDialog({
+                  show: false,
+                });
+              }}></_Btn>
             </View>
-            <View style={{
-              flex: 1,
-              backgroundColor: '#fff',
-              paddingLeft: 10,
-              paddingRight: 10,
-              borderColor: '#eee',
-              borderTopWidth: 0.5,
-            }}>
-              <Text>12313</Text>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#fff',
+                paddingLeft: 10,
+                paddingRight: 10,
+                borderColor: '#eee',
+                borderTopWidth: 0.5,
+              }}>
+              <Text>正文内容</Text>
             </View>
-            <View style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-            }}>
-              {['取消'].map((item, index) => {
-                return <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => {
-
-                  }}
-                  style={[styles.buttonView, {
-                    flex: 1,
-                    zIndex: 1,
-                    marginTop: 0,
-                    height: 50,
-                    lineHeight: 50,
-                    backgroundColor: index == 0 ? 'rgb(243, 243, 243)' : 'rgb(33, 150, 243)',
-                    paddingHorizontal: 0,
-                    borderRadius: 0,
-                    padding: 0,
-                  }]}><Text style={{
-                  color: index == 0 ? 'red' : '#FFF',
-                  fontSize: 16,
-                }}>{item}</Text></TouchableOpacity>;
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}>
+              {['取消', '确定'].map((item, index) => {
+                // item.index = index;
+                return <_BtnBlock>{item}</_BtnBlock>;
               })}
             </View>
           </View>
-        </View>
+        </View>}
+
       </View>
     </Modal>
     <TextInput
