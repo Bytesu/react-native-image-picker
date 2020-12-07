@@ -110,3 +110,14 @@ Image/video captured via camera will be stored in temporary folder so will be de
 ## License
 
 [MIT](LICENSE.md)
+
+
+项目依赖
+###
+
+<pre>
+    "react-native-root-toast": "3.2.1",
+    "react-native-image-zoom-viewer": "3.0.1",
+    "react-native-vector-icons": "7.1.0",
+    "react-native-video": "5.1.0-alpha8",
+</pre> 

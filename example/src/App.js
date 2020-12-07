@@ -1,89 +1,69 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {Button} from './Button';
 
-import * as ImagePicker from '../../src';
+
+import {Form, FormType, Page, toast} from '../../src';
 
 export default function App() {
   const [response, setResponse] = React.useState(null);
+  const form = useRef();
+  const formTestData = [
+    {
+      label: '姓名', name: 'name',
+      value: '苏伟明',
+      type: FormType.INPUT,
+    },
+    {
+      label: '邮箱', name: 'email',
+      value: 'byte_su@163.com',
+      type: FormType.SELECT,
+    },
+    [
+      {
+        label: '性别', name: 'SELECT',
+        value: 'byte_su@163.com',
+        type: FormType.INPUT,
+        // placeholder: '请输入姓名'
+      },
+      {
+        label: '邮箱', name: 'email2',
+        type: FormType.INPUT,
+        value: 'byte_su@163.com',
+      },
 
+    ],
+    {
+      label: '描述', name: 'desc',
+      value: '',
+      type: FormType.TEXTAREA,
+    },
+  ];
+  const [formData, setFormData] = useState([...formTestData]);
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <Page>
+      <>
+        <Form
+          ref={form}
+          list={formData}
+        ></Form>
         <Button
-          title="Take image"
-          onPress={() =>
-            ImagePicker.launchCamera(
-              {
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                setResponse(response);
-              },
-            )
-          }
-        />
-
+          onPress={() => {
+            toast('success');
+            console.log(form.current.submit());
+            formTestData[0].value = '';
+            setFormData([...formTestData.slice(0, 1)]);
+          }}
+          title="提交1212"></Button>
         <Button
-          title="Select image"
-          onPress={() =>
-            ImagePicker.launchImageLibrary(
-              {
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                setResponse(response);
-              },
-            )
-          }
-        />
-
-        <Button
-          title="Take video"
-          onPress={() =>
-            ImagePicker.launchCamera({mediaType: 'video'}, (response) => {
-              setResponse(response);
-            })
-          }
-        />
-
-        <Button
-          title="Select video"
-          onPress={() =>
-            ImagePicker.launchImageLibrary({mediaType: 'video'}, (response) => {
-              setResponse(response);
-            })
-          }
-        />
-
-        <View style={styles.response}>
-          <Text>Res: {JSON.stringify(response)}</Text>
-        </View>
-
-        {response && (
-          <View style={styles.image}>
-            <Image
-              style={{width: 200, height: 200}}
-              source={{uri: response.uri}}
-            />
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+          onPress={() => {
+            console.log(form.current.submit());
+            formTestData[0].value = '123123';
+            setFormData([...formTestData]);
+          }}
+          title="RESET"></Button>
+      </>
+    </Page>
   );
 }
 

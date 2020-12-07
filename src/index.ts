@@ -1,31 +1,14 @@
-import {NativeModules} from 'react-native';
+import Form, {FormType} from './form/index.js';
+import {toast} from './toast/index.js';
+import {Page} from './page/index.js';
 
-import {CameraOptions, ImageLibraryOptions, Callback} from './types';
 export * from './types';
+export * from './image-picker';
 
-const DEFAULT_OPTIONS: CameraOptions = {
-  mediaType: 'photo',
-  videoQuality: 'high',
-  quality: 1,
-  maxWidth: 0,
-  maxHeight: 0,
-  includeBase64: false,
-  saveToPhotos: false,
+
+export {
+  Form,
+  Page,
+  toast,
+  FormType,
 };
-
-export function launchCamera(options: CameraOptions, callback: Callback) {
-  NativeModules.ImagePickerManager.launchCamera(
-    {...DEFAULT_OPTIONS, ...options},
-    callback,
-  );
-}
-
-export function launchImageLibrary(
-  options: ImageLibraryOptions,
-  callback: Callback,
-) {
-  NativeModules.ImagePickerManager.launchImageLibrary(
-    {...DEFAULT_OPTIONS, ...options},
-    callback,
-  );
-}
