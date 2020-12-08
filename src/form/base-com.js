@@ -1,7 +1,19 @@
-import {ActivityIndicator, Button, Modal, Picker, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  FlatList,
+  Modal,
+  Picker,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {IconConstant, IconCustom} from '../icon/';
 import React, {useState} from 'react';
 import _ from 'lodash';
-import styles from '../style';
+import styles, {colors} from '../style';
 
 /**
  * input com
@@ -62,23 +74,37 @@ export function _Title(props) {
 export function _Btn(props) {
   return <Button
     {...props}
-    // title={props.children}
-    // onPress={() => {
-    // }}
     activeOpacity={0.5}
-  >{props.children}
-
-    {/*<Text*/}
-    {/*  style={{color: '#333', fontSize: 14}}*/}
-    {/*>{props.children}</Text>*/}
+  >
   </Button>;
+}
+
+export function _TouchableHighlight(props) {
+  return <TouchableHighlight
+    {...props}
+    activeOpacity={0.6}
+    underlayColor={colors.itemActiveColor}
+    style={[{
+      //backgroundColor: colors.itemActiveColor,
+    }, props.style || {}]}
+  >
+    <>{props.children}</>
+  </TouchableHighlight>;
+}
+
+export function _TouchableOpacity(props) {
+  return <TouchableOpacity
+    activeOpacity={0.6}
+    style={{padding: 0}}
+    {...props}
+  ></TouchableOpacity>;
 }
 
 export function _BtnBlock(props) {
   return <TouchableOpacity
     activeOpacity={0.6}
     onPress={() => {
-
+      props.onPress && props.onPress();
     }}
     style={[styles.buttonView, {
       flex: 1,
@@ -90,22 +116,34 @@ export function _BtnBlock(props) {
       paddingHorizontal: 0,
       borderRadius: 0,
       padding: 0,
-    }]}>
+    }, props.style || {}]}>
     <Text style={{
-      color: 'red',
+      color: props.color || '#333',
       fontSize: 16,
     }}>{props.children}</Text>
   </TouchableOpacity>;
 }
 
-export function _SelectInput(props) {
-  let item = props;
+/**
+ *  搜索框
+ * @returns {*}
+ * @private
+ */
+export function _Search(props) {
+  return <View>
+    <_TextInput placeholder="请输入"></_TextInput>
+  </View>;
+}
 
+export function _SelectInput(props) {
+  let fieldItem = props;
   const handleChangeDebounce = _.debounce(props.change || function(v) {
   }, 500, {'maxWait': 1000});
-  const [dialog, setDialog] = useState({show: false});
+  const [dialog, setDialog] = useState({show: false, selected: fieldItem.value || ''});
   const [height, setHeight] = useState(0);
-  return <>
+  return <View
+    key={props.index}
+  >
     <Modal
       transparent={true}
       animationType="fade"
@@ -147,77 +185,79 @@ export function _SelectInput(props) {
               }}>
               <_Title>请选择</_Title>
               <_Btn title="取消" onPress={() => {
-                // console.log()
-                setDialog({
+                setDialog(Object.assign({}, dialog, {
                   show: false,
-                });
+                }));
               }}></_Btn>
             </View>
-            <View
+            <FlatList
+              data={(fieldItem.options || [])}
+              refreshing={false}
+              onRefresh={() => {
+
+              }}
+              ListEmptyComponent={<_Loading></_Loading>}
+              ListFooterComponent={<View>
+                <Text>没有更多了</Text>
+              </View>}
+              // ListHeaderComponent={<_Search/>}
+              onEndReached={() => {
+                console.log('onEndReached');
+              }}
+              keyExtractor={(item, index) => item.value}
+              renderItem={({item}) => {
+                return <_TouchableHighlight
+                  // key={item.value}
+                  onPress={() => {
+                    setDialog(Object.assign({}, dialog, {show: false, selected: item.value || item.label}));
+                    handleChangeDebounce({[fieldItem.name]: item.value || item.label});
+                  }}
+                  style={[styles.flexRow, styles.radioItem]}
+                >
+                  <View
+                    style={[styles.flex1]}
+                  >
+                    <Text>{item.label || item.value || '未设置label或value'}</Text>
+                  </View>
+                  <IconCustom
+                    onPress={() => {
+                      setDialog(Object.assign({}, dialog, {show: false, selected: item.value || item.label}));
+                      handleChangeDebounce({[fieldItem.name]: item.value || item.label});
+                    }}
+                    name={IconConstant.CIRCLE_CHECK}
+                    color={dialog.selected == item.value ? 'red' : '#999'}></IconCustom>
+                </_TouchableHighlight>;
+              }}
               style={{
                 flex: 1,
                 backgroundColor: '#fff',
-                paddingLeft: 10,
-                paddingRight: 10,
+                padding: 15,
+                borderWidth: 1,
                 borderColor: '#eee',
                 borderTopWidth: 0.5,
               }}>
-              <Text>正文内容</Text>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-              }}>
-              {['取消', '确定'].map((item, index) => {
-                // item.index = index;
-                return <_BtnBlock>{item}</_BtnBlock>;
-              })}
-            </View>
+              {/*{*/}
+              {/*  (item.options || []).map(ele => {*/}
+              {/*    return ;*/}
+              {/*  })*/}
+              {/*}*/}
+            </FlatList>
           </View>
         </View>}
-
       </View>
     </Modal>
-    <TextInput
-      onEndEditing={(e) => {
-      }}
-      onFocus={(e) => {
-        setDialog({show: true});
-      }}
-      onSelectionChange={(e) => {
-      }}
-      onSubmitEditing={(e) => {
-      }}
-      onTextInput={(e) => {
-      }}
-      onContentSizeChange={(e) => {
-      }}
-      onKeyPress={(e) => {
-      }}
-      onChangeText={(v) => {
-        handleChangeDebounce({
-          [item.name]: v,
-        });
-      }}
-      clearButtonMode='never'//清除
-      secureTextEntry={false}
-      placeholder={item.placeholder || ''}
-      defaultValue={item.value || ''}
+    <_BtnBlock
       style={{
-        // width: 150,
-        height: 40,
-        backgroundColor: '#fff',
-        borderRadius: 2,
-        borderColor: '#eee',
-        borderWidth: 1,
-        padding: 10,
+        alignItems: 'flex-start',
+        paddingLeft: 5,
+        textAlign: 'left',
       }}
-      key={item.name}
-    ></TextInput>
-  </>;
+      onPress={() => {
+        setDialog(Object.assign({}, dialog, {show: true}));
+      }}
+    >{dialog.selected || ('选择' + fieldItem.label)}
+    </_BtnBlock>
+  </View>;
 }
 
 /**

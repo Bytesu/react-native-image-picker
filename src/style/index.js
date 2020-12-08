@@ -1,5 +1,8 @@
 import {StyleSheet} from 'react-native';
-import colors from './style-var';
+
+import colors from './var';
+
+export {colors};
 
 const styles = StyleSheet.create({
   //页面背景
@@ -8,7 +11,7 @@ const styles = StyleSheet.create({
   },
   modalBox: { // Loading居中
     flex: 1,
-    backgroundColor:'rgba(4,4,4, 0.57)'
+    backgroundColor: 'rgba(4,4,4, 0.57)',
   },
   buttonView: {
     height: 40,
@@ -17,7 +20,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
     textAlign: 'center',
     marginTop: 10,
   },
@@ -66,6 +68,19 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 10,
     marginBottom: 10,
+  },
+  flexRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  flex1: {
+    flex: 1,
+  },
+  radioItem: {
+    borderBottomWidth: 0.5,
+    borderColor: '#eee',
+    padding: 10,
   },
 });
 export default styles;

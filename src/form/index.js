@@ -113,11 +113,13 @@ export default class Form extends React.Component {
       {
         this.state.list.map((item, index) => {
           if (item instanceof Array) {
-            return <View key={index}>{item.map(ele => {
+            return <View
+
+              key={index}>{item.map(ele => {
               self.genCom(ele);
             })}</View>;
           }
-          item.key = index;
+          item.key = item.index = index;
           return self.genCom(item);
         })
       }

@@ -20,7 +20,8 @@ export function IconCustom(props) {
         onPress={props.onPress || (() => {
         })}
         size={props.size || 24}
-        color={props.color || '#fff'}/>;
+        color={props.color || '#fff'}
+    />;
 }
 
 export {IconConstant} from './icon';
