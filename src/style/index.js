@@ -74,6 +74,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  flexColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   flex1: {
     flex: 1,
   },

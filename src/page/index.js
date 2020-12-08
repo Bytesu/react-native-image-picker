@@ -1,14 +1,8 @@
-import {SafeAreaView, ScrollView, Text,View} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import React from 'react';
 
 export function Page(props) {
-  return <SafeAreaView
-    style={{flex: 1,borderWidth: 0}}
-    onLayout={(event) => {
-      let {x, y, width, height} = event.nativeEvent.layout;
-      console.log(x, y, width, height);
-    }}
-  >
+  return <PageNoScroll>
     <ScrollView
       style={{borderWidth: 0}}
       automaticallyAdjustContentInsets={false}
@@ -23,13 +17,30 @@ export function Page(props) {
         {props.children}
       </View>
     </ScrollView>
+  </PageNoScroll>;
+}
+
+/**
+ * 非滚动页
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
+export function PageNoScroll(props) {
+  return <SafeAreaView
+    {...props}
+    style={[
+      {flex: 1, borderWidth: 0}, props.style || {},
+    ]}
+  >
+    {props.children}
   </SafeAreaView>;
 }
 
 export function PanelTitle(props) {
   return <View
     style={{
-      backgroundColor:'#ccc',
+      backgroundColor: '#ccc',
       paddingBottom: 15,
       paddingTop: 15,
     }}

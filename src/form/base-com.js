@@ -51,16 +51,19 @@ export function _TextInput(props) {
     secureTextEntry={false}
     placeholder={item.placeholder || ''}
     defaultValue={item.value || ''}
-    style={{
-      // width: 150,
-      height: 40,
-      backgroundColor: '#fff',
-      borderRadius: 2,
-      borderColor: '#eee',
-      borderWidth: 1,
-      padding: 10,
-    }}
     key={item.name}
+    {...props}
+    style={[
+      {
+        height: 40,
+        backgroundColor: '#fff',
+        borderRadius: 2,
+        borderColor: '#eee',
+        borderWidth: 1,
+        padding: 10,
+      },
+      props.style || {},
+    ]}
   ></TextInput>;
 }
 
@@ -131,8 +134,18 @@ export function _BtnBlock(props) {
  * @private
  */
 export function _Search(props) {
-  return <View>
-    <_TextInput placeholder="请输入搜索内容"></_TextInput>
+  return <View
+
+    style={{
+      backgroundColor: '#eee',
+      padding: 5,
+    }}>
+    <_TextInput
+      returnKeyType="search"
+      style={{borderRadius: 5}}
+      // caretHidden={true}
+      placeholder="请输入搜索内容"
+    ></_TextInput>
   </View>;
 }
 
@@ -266,6 +279,28 @@ export function _SelectInput(props) {
  */
 export function _Loading() {
   return <ActivityIndicator size="small" color="#00ff00"/>;
+}
+
+/**
+ * header
+ * @param props
+ * @returns {*}
+ * @private
+ */
+export function _Header(props) {
+  return <View
+    {...props}
+    style={[
+      {
+        backgroundColor: '#a0a0a0',
+        padding: 20,
+        paddingVertical: 15,
+        display: 'flex',
+        // height: 50,
+        flexDirection: 'row',
+      }, props.style || {}]}>
+    <_Title>{props.children}</_Title>
+  </View>;
 }
 
 export function _Picker() {
