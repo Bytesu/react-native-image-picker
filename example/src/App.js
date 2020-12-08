@@ -3,6 +3,7 @@ import React from 'react';
 
 import FormApp from './form';
 import My from './my';
+import List from './list';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {IconConstant, IconCustom} from '../../src';
@@ -24,6 +25,7 @@ export default function App() {
         }}
       >
         <Tab.Screen name="Home" component={FormApp}/>
+        <Tab.Screen name="List" component={List}/>
         <Tab.Screen name="My" component={My}/>
       </Tab.Navigator>
     </NavigationContainer>

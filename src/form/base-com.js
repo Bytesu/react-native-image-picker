@@ -4,6 +4,7 @@ import {
   FlatList,
   Modal,
   Picker,
+  Pressable,
   Text,
   TextInput,
   TouchableHighlight,
@@ -131,7 +132,22 @@ export function _BtnBlock(props) {
  */
 export function _Search(props) {
   return <View>
-    <_TextInput placeholder="请输入"></_TextInput>
+    <_TextInput placeholder="请输入搜索内容"></_TextInput>
+  </View>;
+}
+
+/**
+ * 没有更多数据  com
+ * @returns {*}
+ * @private
+ */
+export function _NoMoreData() {
+  return <View style={{
+    width: '100%',
+    paddingTop: 10,
+    paddingBottom: 10,
+  }}>
+    <Text style={{textAlign: 'center', color: '#999'}}>没有更多了</Text>
   </View>;
 }
 
@@ -141,6 +157,32 @@ export function _SelectInput(props) {
   }, 500, {'maxWait': 1000});
   const [dialog, setDialog] = useState({show: false, selected: fieldItem.value || ''});
   const [height, setHeight] = useState(0);
+  const setDialogFn = (param = {show: false}) => {
+    setDialog(Object.assign({}, dialog, param));
+  };
+  const _renderItem = ({item}) => {
+    return <_TouchableHighlight
+      // key={item.value}
+      onPress={() => {
+        setDialogFn({show: false, selected: item.value || item.label});
+        handleChangeDebounce({[fieldItem.name]: item.value || item.label});
+      }}
+      style={[styles.flexRow, styles.radioItem]}
+    >
+      <View
+        style={[styles.flex1]}
+      >
+        <Text>{item.label || item.value || '未设置label或value'}</Text>
+      </View>
+      <IconCustom
+        onPress={() => {
+          setDialogFn({show: false, selected: item.value || item.label});
+          handleChangeDebounce({[fieldItem.name]: item.value || item.label});
+        }}
+        name={IconConstant.CIRCLE_CHECK}
+        color={dialog.selected == item.value ? 'red' : '#999'}></IconCustom>
+    </_TouchableHighlight>;
+  };
   return <View
     key={props.index}
   >
@@ -148,14 +190,11 @@ export function _SelectInput(props) {
       transparent={true}
       animationType="fade"
       visible={dialog.show}
-      onRequestClose={() => {
-        setDialog({
-          show: false,
-        });
-      }}
+      onRequestClose={setDialogFn}
     >
-      <View
+      <Pressable
         style={[styles.modalBox, {}]}
+        onPress={setDialogFn}
         onLayout={(event) => {
           let {x, y, width, height} = event.nativeEvent.layout;
           setHeight(height);
@@ -184,67 +223,27 @@ export function _SelectInput(props) {
                 flexDirection: 'row',
               }}>
               <_Title>请选择</_Title>
-              <_Btn title="取消" onPress={() => {
-                setDialog(Object.assign({}, dialog, {
-                  show: false,
-                }));
-              }}></_Btn>
+              <_Btn
+                title="取消"
+                onPress={setDialogFn}
+              ></_Btn>
             </View>
             <FlatList
               data={(fieldItem.options || [])}
               refreshing={false}
               onRefresh={() => {
-
               }}
               ListEmptyComponent={<_Loading></_Loading>}
-              ListFooterComponent={<View>
-                <Text>没有更多了</Text>
-              </View>}
-              // ListHeaderComponent={<_Search/>}
+              ListFooterComponent={<_NoMoreData/>}
               onEndReached={() => {
-                console.log('onEndReached');
               }}
               keyExtractor={(item, index) => item.value}
-              renderItem={({item}) => {
-                return <_TouchableHighlight
-                  // key={item.value}
-                  onPress={() => {
-                    setDialog(Object.assign({}, dialog, {show: false, selected: item.value || item.label}));
-                    handleChangeDebounce({[fieldItem.name]: item.value || item.label});
-                  }}
-                  style={[styles.flexRow, styles.radioItem]}
-                >
-                  <View
-                    style={[styles.flex1]}
-                  >
-                    <Text>{item.label || item.value || '未设置label或value'}</Text>
-                  </View>
-                  <IconCustom
-                    onPress={() => {
-                      setDialog(Object.assign({}, dialog, {show: false, selected: item.value || item.label}));
-                      handleChangeDebounce({[fieldItem.name]: item.value || item.label});
-                    }}
-                    name={IconConstant.CIRCLE_CHECK}
-                    color={dialog.selected == item.value ? 'red' : '#999'}></IconCustom>
-                </_TouchableHighlight>;
-              }}
-              style={{
-                flex: 1,
-                backgroundColor: '#fff',
-                padding: 15,
-                borderWidth: 1,
-                borderColor: '#eee',
-                borderTopWidth: 0.5,
-              }}>
-              {/*{*/}
-              {/*  (item.options || []).map(ele => {*/}
-              {/*    return ;*/}
-              {/*  })*/}
-              {/*}*/}
+              renderItem={_renderItem}
+            >
             </FlatList>
           </View>
         </View>}
-      </View>
+      </Pressable>
     </Modal>
     <_BtnBlock
       style={{
@@ -253,7 +252,7 @@ export function _SelectInput(props) {
         textAlign: 'left',
       }}
       onPress={() => {
-        setDialog(Object.assign({}, dialog, {show: true}));
+        setDialogFn({show: true});
       }}
     >{dialog.selected || ('选择' + fieldItem.label)}
     </_BtnBlock>
