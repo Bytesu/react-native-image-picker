@@ -5,32 +5,40 @@ import {Animated} from 'react-native';
 import {_FlatList, _Header, PageNoScroll} from '../../src';
 import styles from '../../src/style';
 
+/**
+ * @todo
+ * 1. 滚动式抖屏
+ * 2. 已上滑隐藏header后, 输入搜索条件,header生硬出现
+ */
 export default class App extends React.PureComponent {
-  // return  <_FlatList />
   constructor(props) {
     super(props);
     this.state = {
-      top: new Animated.Value(0),
+      animateVar: new Animated.Value(0),
       ctner: 0,
       header: 0,
     };
-  }
+    this.animateVar = this.state.animateVar.interpolate({
+      inputRange: [0, 50, 201, 600],
+      outputRange: [0, -50, -50, -50],
+    });
+    this.opacity = this.state.animateVar.interpolate({
+      inputRange: [0, 20, 50, 201, 600],
+      outputRange: [1, 0.5, 0, 0, 0],
+    });
+  };
 
   componentDidMount() {
-    this.top = this.state.top.interpolate({
-      inputRange: [0, 10, 20, 30, 40, 50, 120, 500, 900, 1400],
-      outputRange: [0, -10, -20, -30, -40, -50, -50, -50, -50, -50],
-    });
-  }
-
-  animatedEvent(e) {
-    return Animated.event([
-      {
-        nativeEvent: {
-          contentOffset: {y: 50},
+    this.animatedEvent = Animated.event([
+        {
+          nativeEvent: {
+            contentOffset: {y: this.state.animateVar},
+          },
         },
-      },
-    ]);
+      ],
+      {
+        useNativeDriver: true,
+      });
   }
 
   setSta(param = {}) {
@@ -40,12 +48,11 @@ export default class App extends React.PureComponent {
 
   render() {
     const {state} = this, self = this;
-    console.log(this.top);
     return (
       <PageNoScroll
         onLayout={(event) => {
           let {x, y, width, height} = event.nativeEvent.layout;
-          this.setSta({ctner: height});
+          this.setState({ctner: height});
         }}
         style={[
           styles.flexColumn, {
@@ -54,20 +61,25 @@ export default class App extends React.PureComponent {
         }
       >
         <Animated.View
-          style={{top: self.top}}
+          style={{
+            // transform: [{
+            //   translateY: self.animateVar,
+            // }],
+            opacity: this.opacity,
+          }}
           onLayout={(event) => {
             let {x, y, width, height} = event.nativeEvent.layout;
-            this.setSta({header: height});
+            this.setState({header: height});
           }}
         >
-          <_Header
-          >列表
-          </_Header>
+          <_Header>列表测试</_Header>
         </Animated.View>
         <Animated.View
           style={{
-            top: self.top,
-            height: state.ctner - state.header,
+            // transform: [{
+            //   translateY: self.animateVar,
+            // }],
+            height: state.ctner - state.header + 50,
           }}
         >
           <_FlatList
