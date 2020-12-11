@@ -135,7 +135,6 @@ export function _BtnBlock(props) {
  */
 export function _Search(props) {
   return <View
-
     style={{
       backgroundColor: '#eee',
       padding: 5,

@@ -32,16 +32,14 @@ export class _FlatList extends React.PureComponent {
     return <Animated.FlatList
       data={this.state.list}
       refreshing={false}
+      scrollEventThrottle={1}
       onRefresh={() => {
       }}
-      onScroll={(e) => {
-        props.onScroll && props.onScroll(e);
-      }}
+      onScroll={props.onScroll}
       style={{
         flex: 1,
         borderColor: 'red',
         borderWidth: 0,
-        // height:400
       }}
       ListHeaderComponent={<_Search></_Search>}
       stickyHeaderIndices={[0]}
@@ -52,6 +50,7 @@ export class _FlatList extends React.PureComponent {
       ListFooterComponent={<_NoMoreData/>}
       onEndReached={() => {
       }}
+      onEndReachedThreshold={30}
       keyExtractor={(item, index) => item.value}
       renderItem={this._renderItem}
       ItemSeparatorComponent={() => <View

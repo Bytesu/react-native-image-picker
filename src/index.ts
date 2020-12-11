@@ -12,8 +12,10 @@ export * from './image-picker';
 export {
   Form,
   _FlatList,
-  Page,PageNoScroll,
-  IconCustom,IconConstant,
+  Page,
+  PageNoScroll,
+  IconCustom,
+  IconConstant,
   toast,
   _Header,
   FormType,
