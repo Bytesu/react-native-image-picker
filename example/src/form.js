@@ -21,7 +21,7 @@ export default function App() {
     {
       label: '籍贯', name: 'birth',
       value: '',
-      type: FormType.SELECT_FROM_PAGE,
+      type: FormType.SELECT_FROM_DOWN_PANEL,
       options: [
         {value: '河南', label: '河南'},
         {value: '山西', label: '山西'},
@@ -40,6 +40,16 @@ export default function App() {
         {value: '陕西12', label: '陕西12'},
       ],
     },
+    {
+      label: '选择城市', name: 'city',
+      value: '',
+      type: FormType.SELECT_FROM_PAGE,
+      page:{
+        router:'/list',
+
+      }
+
+    },
     [
       {
         label: '性别', name: 'SELECT',
@@ -52,7 +62,6 @@ export default function App() {
         type: FormType.INPUT,
         value: 'byte_su@163.com',
       },
-
     ],
     {
       label: '描述', name: 'desc',
@@ -65,7 +74,7 @@ export default function App() {
     <Page>
       <>
         <Form
-          ref={form}
+          ref={(ref)=>form =ref}
           list={formData}
         ></Form>
         <Button
@@ -78,7 +87,7 @@ export default function App() {
           title="提交1212"></Button>
         <Button
           onPress={() => {
-            console.log(form.current.submit());
+            console.log(form.submit());
             formTestData[0].value = '123123';
             setFormData([...formTestData]);
           }}

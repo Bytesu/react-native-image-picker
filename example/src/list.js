@@ -62,9 +62,9 @@ export default class App extends React.PureComponent {
       >
         <Animated.View
           style={{
-            // transform: [{
-            //   translateY: self.animateVar,
-            // }],
+            transform: [{
+              translateY: self.animateVar,
+            }],
             opacity: this.opacity,
           }}
           onLayout={(event) => {
@@ -76,9 +76,9 @@ export default class App extends React.PureComponent {
         </Animated.View>
         <Animated.View
           style={{
-            // transform: [{
-            //   translateY: self.animateVar,
-            // }],
+            transform: [{
+              translateY: self.animateVar,
+            }],
             height: state.ctner - state.header + 50,
           }}
         >

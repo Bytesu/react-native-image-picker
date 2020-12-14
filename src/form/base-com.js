@@ -15,6 +15,8 @@ import {IconConstant, IconCustom} from '../icon/';
 import React, {useState} from 'react';
 import _ from 'lodash';
 import styles, {colors} from '../style';
+import { useNavigation } from '@react-navigation/native';
+
 
 /**
  * input com
@@ -26,7 +28,8 @@ export function _TextInput(props) {
   let item = props;
   const handleChangeDebounce = _.debounce(props.change || function(v) {
   }, 500, {'maxWait': 1000});
-
+  const {value = '',secureTextEntry=false, ..._props} = props;
+  console.log(secureTextEntry);
   return <TextInput
     onEndEditing={(e) => {
     }}
@@ -48,14 +51,13 @@ export function _TextInput(props) {
       });
     }}
     clearButtonMode='never'//清除
-    secureTextEntry={false}
     placeholder={item.placeholder || ''}
-    defaultValue={item.value || ''}
+    defaultValue={value}
     key={item.name}
-    {...props}
+    {..._props}
     style={[
       {
-        height: 40,
+        height: 46,
         backgroundColor: '#fff',
         borderRadius: 2,
         borderColor: '#eee',
@@ -64,6 +66,7 @@ export function _TextInput(props) {
       },
       props.style || {},
     ]}
+    secureTextEntry={secureTextEntry||false}
   ></TextInput>;
 }
 
@@ -267,6 +270,26 @@ export function _SelectInput(props) {
         setDialogFn({show: true});
       }}
     >{dialog.selected || ('选择' + fieldItem.label)}
+    </_BtnBlock>
+  </View>;
+}
+
+export function _SelectInputFromPage(props) {
+  const {...fieldItem} = props;
+
+  return <View
+    key={fieldItem.index}
+  >
+    <_BtnBlock
+      style={{
+        alignItems: 'flex-start',
+        paddingLeft: 5,
+        textAlign: 'left',
+      }}
+      onPress={() => {
+        useNavigation().navigate('List2')
+      }}
+    >{('选择' + fieldItem.label)}
     </_BtnBlock>
   </View>;
 }
